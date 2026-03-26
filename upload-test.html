@@ -3,61 +3,91 @@
 
 <head>
 
-<title>Meesho Image Generator</title>
+<title>SellerAI - Meesho Image Generator</title>
 
 <style>
 
 body{
 font-family:Arial;
-background:#ffc0cb; /* Baby Pink */
+background:linear-gradient(135deg,#ff9ecb,#ff5fa2);
+margin:0;
+padding:0;
 text-align:center;
-padding:40px;
-color:#333;
+color:white;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:60px 20px;
 }
 
 h1{
-color:white;
-font-size:36px;
+font-size:42px;
+margin-bottom:10px;
 }
 
 p{
-color:white;
+opacity:0.9;
+margin-bottom:30px;
+}
+
+.upload-box{
+background:white;
+padding:40px;
+border-radius:12px;
+color:#333;
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
+}
+
+input[type=file]{
+margin-top:10px;
 }
 
 button{
-padding:15px 25px;
-font-size:16px;
+margin-top:20px;
+padding:15px 30px;
 background:#ff4d88;
 color:white;
 border:none;
+border-radius:8px;
+font-size:16px;
 cursor:pointer;
-margin-top:20px;
-border-radius:6px;
 }
 
 button:hover{
 background:#ff2f73;
 }
 
-img{
-margin:10px;
-max-width:200px;
-display:block;
-background:white;
-padding:15px;
-border-radius:10px;
+.gallery{
+margin-top:50px;
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+gap:30px;
 }
 
 .card{
-display:inline-block;
-margin:15px;
-text-align:center;
+background:white;
+border-radius:12px;
+padding:20px;
+color:#333;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-a{
+.card img{
+max-width:100%;
+border-radius:8px;
+}
+
+.download{
+display:inline-block;
+margin-top:10px;
+padding:8px 15px;
+background:#ff4d88;
 color:white;
-font-weight:bold;
+border-radius:6px;
 text-decoration:none;
+font-size:14px;
 }
 
 </style>
@@ -66,9 +96,13 @@ text-decoration:none;
 
 <body>
 
-<h1>Meesho Image Generator</h1>
+<div class="container">
+
+<h1>Meesho AI Image Generator</h1>
 
 <p>Upload your product image and generate optimized catalog images.</p>
+
+<div class="upload-box">
 
 <input type="file" id="file">
 
@@ -76,33 +110,39 @@ text-decoration:none;
 
 <button onclick="generate()">Generate Images</button>
 
-<div id="gallery"></div>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+</div>
 
 <script>
 
 function generate(){
 
-const file = document.getElementById("file").files[0]
+const file=document.getElementById("file").files[0]
 
-const data = new FormData()
+if(!file){
+alert("Upload image first")
+return
+}
 
-data.append("file", file)
+const data=new FormData()
 
+data.append("file",file)
 data.append("upload_preset","y10zgm3v")
 
 fetch("https://api.cloudinary.com/v1_1/dziivw8db/image/upload",{
-
 method:"POST",
 body:data
-
 })
 
 .then(res=>res.json())
 .then(result=>{
 
-const id = result.public_id
+const id=result.public_id
 
-const variations = [
+const variations=[
 
 "c_pad,b_white,w_2000,h_2000,q_auto,f_auto",
 "c_fill,w_2000,h_2000,q_auto,f_auto",
@@ -120,25 +160,26 @@ const variations = [
 
 ]
 
-const gallery = document.getElementById("gallery")
+const gallery=document.getElementById("gallery")
 
-gallery.innerHTML = ""
+gallery.innerHTML=""
 
 variations.forEach(v=>{
 
-const card = document.createElement("div")
+const card=document.createElement("div")
 card.className="card"
 
-const img = document.createElement("img")
+const img=document.createElement("img")
 
-const url =
+const url=
 `https://res.cloudinary.com/dziivw8db/image/upload/${v}/${id}`
 
-img.src = url
+img.src=url
 
-const link = document.createElement("a")
+const link=document.createElement("a")
 link.href=url
 link.download="image"
+link.className="download"
 link.innerText="Download"
 
 card.appendChild(img)
@@ -155,4 +196,5 @@ gallery.appendChild(card)
 </script>
 
 </body>
+
 </html>
