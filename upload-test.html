@@ -38,6 +38,11 @@ padding:40px;
 border-radius:12px;
 color:#333;
 box-shadow:0 10px 30px rgba(0,0,0,0.15);
+border:2px dashed #ff4d88;
+}
+
+.upload-box.drag{
+background:#fff0f5;
 }
 
 input[type=file]{
@@ -90,6 +95,11 @@ text-decoration:none;
 font-size:14px;
 }
 
+.loader{
+margin-top:20px;
+display:none;
+}
+
 </style>
 
 </head>
@@ -102,13 +112,21 @@ font-size:14px;
 
 <p>Upload your product image and generate optimized catalog images.</p>
 
-<div class="upload-box">
+<div class="upload-box" id="dropZone">
+
+<p>Drag & Drop Image Here</p>
 
 <input type="file" id="file">
 
 <br>
 
 <button onclick="generate()">Generate Images</button>
+
+<br>
+
+<button onclick="downloadAll()">Download All Images</button>
+
+<div class="loader" id="loader">Generating images...</div>
 
 </div>
 
@@ -118,7 +136,28 @@ font-size:14px;
 
 <script>
 
+let generatedImages=[]
+
+const dropZone=document.getElementById("dropZone")
+
+dropZone.addEventListener("dragover",e=>{
+e.preventDefault()
+dropZone.classList.add("drag")
+})
+
+dropZone.addEventListener("dragleave",()=>{
+dropZone.classList.remove("drag")
+})
+
+dropZone.addEventListener("drop",e=>{
+e.preventDefault()
+dropZone.classList.remove("drag")
+document.getElementById("file").files=e.dataTransfer.files
+})
+
 function generate(){
+
+generatedImages=[]
 
 const file=document.getElementById("file").files[0]
 
@@ -126,6 +165,8 @@ if(!file){
 alert("Upload image first")
 return
 }
+
+document.getElementById("loader").style.display="block"
 
 const data=new FormData()
 
@@ -140,26 +181,21 @@ body:data
 .then(res=>res.json())
 .then(result=>{
 
-const id=result.public_id
+document.getElementById("loader").style.display="none"
 
-/* AI Catalog Generator */
+const id=result.public_id
 
 const variations=[
 
 "e_background_removal,c_pad,b_white,w_2000,h_2000,q_auto,f_auto,e_shadow",
-
 "e_background_removal,c_fill,g_auto,w_2000,h_2000,q_auto,f_auto,e_shadow",
-
 "e_background_removal,c_fit,g_auto,w_2000,h_2000,q_auto,f_auto,e_shadow",
 
 "e_background_removal,c_pad,b_white,w_1800,h_1800,q_auto,f_auto,e_shadow",
-
 "e_background_removal,c_fill,g_auto,w_1800,h_1800,q_auto,f_auto,e_shadow",
-
 "e_background_removal,c_fit,g_auto,w_1800,h_1800,q_auto,f_auto,e_shadow",
 
 "e_background_removal,c_pad,b_white,w_1500,h_1500,q_auto,f_auto,e_shadow",
-
 "e_background_removal,c_fill,g_auto,w_1500,h_1500,q_auto,f_auto,e_shadow"
 
 ]
@@ -168,21 +204,22 @@ const gallery=document.getElementById("gallery")
 
 gallery.innerHTML=""
 
-variations.forEach(v=>{
+variations.forEach((v,i)=>{
 
 const card=document.createElement("div")
 card.className="card"
 
 const img=document.createElement("img")
 
-const url=
-`https://res.cloudinary.com/dziivw8db/image/upload/${v}/${id}`
+const url=`https://res.cloudinary.com/dziivw8db/image/upload/${v}/${id}`
 
 img.src=url
 
+generatedImages.push(url)
+
 const link=document.createElement("a")
 link.href=url
-link.download="image"
+link.download="catalog_"+i+".jpg"
 link.className="download"
 link.innerText="Download"
 
@@ -192,6 +229,24 @@ card.appendChild(link)
 gallery.appendChild(card)
 
 })
+
+})
+
+.catch(()=>{
+document.getElementById("loader").style.display="none"
+alert("Image processing failed")
+})
+
+}
+
+function downloadAll(){
+
+generatedImages.forEach((url,i)=>{
+
+const link=document.createElement("a")
+link.href=url
+link.download="catalog_"+i+".jpg"
+link.click()
 
 })
 
