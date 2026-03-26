@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<title>Meesho AI Catalog Generator</title>
+<title>Meesho Image Generator</title>
 
 <style>
 
@@ -16,7 +17,6 @@ color:white;
 
 h1{
 font-size:40px;
-margin-bottom:10px;
 }
 
 button{
@@ -92,50 +92,32 @@ data.append("file",file)
 data.append("upload_preset","unsigned_upload")
 
 fetch("https://api.cloudinary.com/v1_1/dziivw8db/image/upload",{
-
 method:"POST",
 body:data
-
 })
 
 .then(res=>res.json())
+
 .then(result=>{
 
-const id=result.public_id
-
-const variations=[
-
-"c_fill,w_2000,h_2000,b_white",
-"c_pad,b_white,w_2000,h_2000",
-"c_fill,w_1800,h_1800",
-"c_fill,w_1600,h_1600",
-"c_fill,w_1500,h_1500",
-"c_fill,w_1400,h_1400",
-"c_fill,w_1300,h_1300",
-"c_fill,w_1200,h_1200",
-"c_fill,w_1100,h_1100",
-"c_fill,w_1000,h_1000"
-
-]
+const base=result.secure_url
 
 const gallery=document.getElementById("gallery")
 
 gallery.innerHTML=""
 
-variations.forEach(v=>{
+for(let i=0;i<10;i++){
 
 const card=document.createElement("div")
 card.className="card"
 
 const img=document.createElement("img")
 
-const url=`https://res.cloudinary.com/dziivw8db/image/upload/${v}/${id}.png`
-
-img.src=url
+img.src=base
 
 const link=document.createElement("a")
 
-link.href=url
+link.href=base
 link.download="catalog-image"
 link.innerText="Download"
 
@@ -144,7 +126,7 @@ card.appendChild(link)
 
 gallery.appendChild(card)
 
-})
+}
 
 })
 
