@@ -9,22 +9,34 @@
 body{
 font-family:Arial;
 text-align:center;
-background:#f5f5f5;
+background:#ff3f8e;
 padding:40px;
+color:white;
 }
 
 h1{
 font-size:40px;
+margin-bottom:10px;
+}
+
+p{
+margin-bottom:30px;
 }
 
 button{
-background:#4CAF50;
-color:white;
+background:white;
+color:#ff3f8e;
 padding:15px 30px;
 border:none;
 font-size:18px;
 cursor:pointer;
 margin-top:20px;
+border-radius:6px;
+font-weight:bold;
+}
+
+button:hover{
+opacity:0.9;
 }
 
 .grid{
@@ -38,11 +50,15 @@ img{
 width:200px;
 background:white;
 padding:20px;
+border-radius:8px;
 }
 
 a{
 display:block;
 margin-top:10px;
+color:white;
+font-weight:bold;
+text-decoration:none;
 }
 
 </style>
@@ -51,9 +67,9 @@ margin-top:10px;
 
 <body>
 
-<h1>Meesho AI Catalog Generator</h1>
+<h1>Meesho Image Generator</h1>
 
-<p>Upload your product image and generate Meesho-ready catalog images.</p>
+<p>Upload your product image and generate optimized catalog images.</p>
 
 <input type="file" id="file">
 
@@ -97,16 +113,16 @@ const id=result.public_id
 
 const variations=[
 
-"e_background_removal/c_fill,w_2000,h_2000,b_white",
-"e_background_removal/c_pad,b_white,w_2000,h_2000",
-"e_background_removal/c_fill,w_1800,h_1800",
-"e_background_removal/c_scale,w_2000",
-"e_background_removal/c_fill,w_1600,h_1600",
-"e_background_removal/c_pad,b_white,w_1600,h_1600",
-"e_background_removal/c_fill,w_1500,h_1500",
-"e_background_removal/c_scale,w_1500",
-"e_background_removal/c_fill,w_1200,h_1200",
-"e_background_removal/c_scale,w_1200"
+"c_fill,w_2000,h_2000,b_white",
+"c_pad,b_white,w_2000,h_2000",
+"c_fill,w_1800,h_1800",
+"c_scale,w_2000",
+"c_fill,w_1600,h_1600",
+"c_pad,b_white,w_1600,h_1600",
+"c_fill,w_1500,h_1500",
+"c_scale,w_1500",
+"c_fill,w_1200,h_1200",
+"c_scale,w_1200"
 
 ]
 
