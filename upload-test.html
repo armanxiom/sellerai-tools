@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Meesho Image Generator</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f5f5;
+text-align:center;
+padding:40px;
+}
+
+button{
+padding:15px 25px;
+font-size:16px;
+background:#4CAF50;
+color:white;
+border:none;
+cursor:pointer;
+margin-top:20px;
+}
+
+img{
+margin:10px;
+max-width:200px;
+display:block;
+}
+
+.card{
+display:inline-block;
+margin:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Meesho Image Generator</h1>
+
+<p>Upload your product image and generate optimized catalog images.</p>
+
+<input type="file" id="file">
+
+<br>
+
+<button onclick="generate()">Generate Images</button>
+
+<div id="gallery"></div>
+
+<script>
+
+function generate(){
+
+const file = document.getElementById("file").files[0]
+
+const data = new FormData()
+
+data.append("file", file)
+
+data.append("upload_preset","y10zgm3v")
+
+fetch("https://api.cloudinary.com/v1_1/dziivw8db/image/upload",{
+
+method:"POST",
+body:data
+
+})
+
+.then(res=>res.json())
+.then(result=>{
+
+const id = result.public_id
+
+const variations = [
+
+"c_pad,b_white,w_2000,h_2000,q_auto,f_auto",
+
+"c_fill,w_2000,h_2000,q_auto,f_auto",
+
+"c_fit,w_2000,h_2000,q_auto,f_auto",
+
+"c_pad,b_white,w_1800,h_1800,q_auto,f_auto",
+
+"c_fill,w_1800,h_1800,q_auto,f_auto",
+
+"c_fit,w_1800,h_1800,q_auto,f_auto",
+
+"c_pad,b_white,w_1500,h_1500,q_auto,f_auto",
+
+"c_fill,w_1500,h_1500,q_auto,f_auto",
+
+"c_fit,w_1500,h_1500,q_auto,f_auto",
+
+"c_scale,w_1200,q_auto"
+
+]
+
+const gallery = document.getElementById("gallery")
+
+gallery.innerHTML = ""
+
+variations.forEach(v=>{
+
+const card = document.createElement("div")
+card.className="card"
+
+const img = document.createElement("img")
+
+const url =
+`https://res.cloudinary.com/dziivw8db/image/upload/${v}/${id}`
+
+img.src = url
+
+const link = document.createElement("a")
+link.href=url
+link.download="image"
+
+link.innerText="Download"
+
+card.appendChild(img)
+card.appendChild(link)
+
+gallery.appendChild(card)
+
+})
+
+})
+
+}
+
+</script>
+
+</body>
+</html>
